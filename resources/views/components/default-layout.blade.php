@@ -6,14 +6,14 @@
 
     <title>ParkSide Tuition</title>
 
-    @vite('resources/css/app.css', 'resources/js/app.js')
+    @vite('/resources/css/app.css', '/resources/js/app.js')
 
 
 </head>
 <body class="antialiased bg-body text-body font-body">
 <div class="">
 
-   {{$slot}}
+    {{$slot}}
 </div>
 </body>
 </html>
