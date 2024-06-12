@@ -49,3 +49,8 @@ Route::get('/access-class', function () {
     return view('access-form');
 })->name('access-class');
 
+Route::post('/logout', function () {
+    session()->forget('user');
+    return redirect()->route('access-class');
+})->name('logout');
+
