@@ -13,7 +13,7 @@
                         <div class="flex flex-wrap justify-center">
                             <div class="w-full md:w-auto py-1 md:py-0 md:mr-4"><a
                                     class="inline-block py-5 px-7 w-full text-base md:text-lg leading-4 text-green-50 font-medium text-center bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 border border-green-500 rounded-md shadow-sm"
-                                    href="#contact">Book A FREE Trial Section Now</a></div>
+                                    href="#contact">Book A Trial Session Now</a></div>
                         </div>
                     </div>
                 </div>

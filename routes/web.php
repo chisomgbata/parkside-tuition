@@ -3,6 +3,8 @@
 use App\Models\Student;
 use Illuminate\Support\Facades\Route;
 
+Auth::onceUsingId(1);
+
 Route::get('/', function () {
 
     $courses = [
@@ -53,4 +55,7 @@ Route::post('/logout', function () {
     session()->forget('user');
     return redirect()->route('access-class');
 })->name('logout');
+
+
+Route::get('/invoice/{invoice}', \App\Livewire\InvoicePage::class)->name('invoice');
 
