@@ -1,7 +1,8 @@
 <div class="max-w-3xl mx-auto mt-8 bg-white shadow-md rounded-lg">
     <!-- Invoice Header -->
     <div class="p-6 border-b border-gray-200">
-        <h1 class="text-2xl font-bold text-gray-700">Invoice</h1>
+        <h1 class="text-2xl font-bold text-gray-700">Invoice  {{$invoice->status == 'confirmed' ? 'Receipt' : ''}}
+        </h1>
         <p class="text-sm text-gray-500">Invoice {{$invoice->invoice_number}}</p>
         <p class="text-sm text-gray-500">{{\Carbon\Carbon::parse($invoice->created_at)->format('d M Y')}}</p>
     </div>
@@ -18,11 +19,11 @@
             </thead>
             <tbody>
 
-            @foreach($invoice->invoiceItems as $item)
+            @foreach($invoice->items as $item)
 
                 <tr>
                     <td class="border border-gray-200 p-2">{{$item->description}}</td>
-                    <td class="border border-gray-200 p-2 text-right">${{$item->price}}</td>
+                    <td class="border border-gray-200 p-2 text-right">£{{$item->price}}</td>
                 </tr>
             @endforeach
 
@@ -31,7 +32,7 @@
             <tr>
                 <td colspan="3" class="border border-gray-200 p-2 text-right font-bold">Total</td>
                 <td class="border border-gray-200 p-2 text-right font-bold">
-                    ${{$invoice->invoiceItems->sum('price')}}
+                    £{{$invoice->items->sum('price')}}
                 </td>
             </tr>
             </tfoot>

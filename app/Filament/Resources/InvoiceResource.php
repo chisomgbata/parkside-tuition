@@ -18,7 +18,10 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -84,23 +87,43 @@ class InvoiceResource extends Resource
                 TextColumn::make('client.name')
                     ->searchable()
                     ->sortable(),
+
+                TextColumn::make('items_sum_price')->sum('items', 'price')->label('Total'),
+
                 TextColumn::make('sent_at')->dateTime(),
                 TextColumn::make('paid_at')->dateTime(),
+
+
 
                 TextColumn::make('due_date')
                     ->date(),
 
-                TextColumn::make('status')->badge(),
+                SelectColumn::make('status')->options(
+                    [
+                        'paid' => 'Paid',
+                        'confirmed' => 'Confirmed',
+                    ]
+                )->selectablePlaceholder(false)    ->afterStateUpdated(function ($record, $state) {
+                 if($state === 'confirmed'){
+                    Mail::to($record->client->email)->send(new \App\Mail\ReceiptMail($record->client->name, route('invoice', $record->id)));
+                 }
+                })->disabled(fn($record) => $record->status !== 'paid'),
 
 
-                TextColumn::make('additional_notes')->html(),
+//                TextColumn::make('additional_notes')->html(),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('status')
+                    ->options([
+                        'draft' => 'Draft',
+                        'sent' => 'Sent',
+                        'paid' => 'Paid',
+                        'confirmed' => 'Confirmed',
+                    ])
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Action::make('Send Invoice')->action(function (Invoice $record){
-                    if ($record->invoiceItems()->count() < 1){
+                    if ($record->items()->count() < 1){
                      Notification::make()
                      ->title('You cannot send an invoice without any items')->danger()->send()
                      ;
@@ -113,7 +136,8 @@ class InvoiceResource extends Resource
                     Mail::to(
                         $client->email,
                     )->send(new \App\Mail\InvoiceMail($client->name, route('invoice', $record->id)));
-                })->button(),
+                })->button()
+                ->visible(fn(Invoice $record) => $record->status === 'draft'),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

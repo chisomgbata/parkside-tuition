@@ -6,6 +6,7 @@ use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
